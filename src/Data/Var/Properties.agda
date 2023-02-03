@@ -43,7 +43,7 @@ nested-if-same-cond-else : ∀ {a : Set} c (t1 : a) {t2} t3 →
 nested-if-same-cond-else true t1 {t2} t3 = refl
 nested-if-same-cond-else false t1 {t2} t3 = refl
 
-open-close-id : ∀{n} x v → open' x (close {n} x v) ≡ v
+open-close-id : ∀ x v → open' x (close x v) ≡ v
 open-close-id x (Bound n) = refl
 open-close-id x (Free y zero) = begin
     open' x (close x (Free y zero))
@@ -82,7 +82,7 @@ open-close-id x (Free y (suc i)) = begin
     Free y (suc i)
   ∎
 
-close-open-id : ∀{n} x v → close {n} x (open' x v) ≡ v
+close-open-id : ∀ x v → close x (open' x v) ≡ v
 close-open-id x (Bound zero) = begin
     close x (open' x (Bound zero))
   ≡⟨ refl ⟩
@@ -137,3 +137,9 @@ close-open-id x (Free y (suc i)) = begin
   ≡⟨ if-both-branches (x == y) (Free y (suc i)) ⟩
     Free y (suc i)
   ∎
+
+module _ {ℓ} (T : Set ℓ) (Ops : MakeOps T) where
+  open MakeOps Ops
+  bind-wk-id : ∀ u v → bind u (wk v) ≡ var v
+  bind-wk-id u (Bound n) = refl
+  bind-wk-id u (Free x i) = refl
