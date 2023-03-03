@@ -140,6 +140,7 @@ close-open-id x (Free y (suc i)) = begin
 
 module _ {ℓ} (T : Set ℓ) (Ops : MakeOps T) where
   open MakeOps Ops
+
   bind-wk-id : ∀ u v → bind u (wk v) ≡ var v
   bind-wk-id u (Bound n) = refl
   bind-wk-id u (Free x i) = refl

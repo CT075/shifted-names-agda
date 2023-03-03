@@ -64,6 +64,9 @@ record MakeOps {ℓ : Level} (T : Set ℓ) : Set ℓ where
   Rename_to_ : String → String → Op T
   Rename x to y = Open y ∘ Close x
 
-  -- Substitution
   Subst : T → String → Op T
   Subst u x = Bind u ∘ Close x
+
+  Shift : String -> Op T
+  Shift x = Open x ∘ Wk
+
