@@ -10,6 +10,7 @@ open import Data.Empty using (⊥-elim)
 open import Relation.Binary.PropositionalEquality as PropEq
 open import Relation.Nullary using (Dec; yes; no)
 open import Relation.Nullary.Decidable using (map′; isYes)
+open import Effect.Functor
 
 open import Data.Var.Base
 
@@ -43,7 +44,7 @@ nested-if-same-cond-else : ∀ {a : Set} c (t1 : a) {t2} t3 →
 nested-if-same-cond-else true t1 {t2} t3 = refl
 nested-if-same-cond-else false t1 {t2} t3 = refl
 
-open-close-id : ∀ x v → openVar x (closeVar x v) ≡ v
+open-close-id : ∀ x (v : Var n) → openVar x (closeVar x v) ≡ v
 open-close-id x (Bound n) = refl
 open-close-id x (Free (N y zero)) = begin
     openVar x (closeVar x (Free (N y zero)))
@@ -112,7 +113,7 @@ open-close-id x (Free (N y (suc i))) = begin
     Free (N y (suc i))
   ∎
 
-close-open-id : ∀ x v → closeVar x (openVar x v) ≡ v
+close-open-id : ∀ x (v : Var (suc n)) → closeVar x (openVar x v) ≡ v
 close-open-id x (Bound zero) = begin
     closeVar x (openVar x (Bound zero))
   ≡⟨ refl ⟩
@@ -168,10 +169,14 @@ close-open-id x (Free (N y (suc i))) = begin
     Free (N y (suc i))
   ∎
 
-module _ {ℓ} (T : Set ℓ) (S : Set ℓ) (subst : Subst T S) where
+module _ {ℓ}
+    (T : Set → Set ℓ)
+    (S : ℕ → Set)
+    {{R : RawFunctor T}} {{Ext : FunctorExt T}}
+    (subst : Subst T S) where
   open Subst subst
 
-  bind-wk-var-id : ∀ u v → bindVar u (wkVar v) ≡ var v
+  bind-wk-var-id : ∀ u (v : Var n) → bindVar u (wkVar v) ≡ var v
   bind-wk-var-id u (Bound n) = refl
   bind-wk-var-id u (Free name) = refl
 
